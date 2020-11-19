@@ -1,0 +1,181 @@
+﻿
+<html>
+<head>
+    <style>
+        input[type=button] {
+            background-color:brown;
+            border: 1px solid #00abeb;
+            padding:5px;
+        }
+        input[type=button]:hover {
+            background-color:chartreuse;
+            border: 1px solid black;
+            padding:5px;
+        }
+        body {
+            background-color:antiquewhite;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script>
+        function getPhones() {
+
+            $("#tab1").css("display", "none");
+            $.getJSON("/api/Phones/", function (data) {
+                $("#tab1").css("display", "block");
+            $.each(data, function (key, val) {
+                $("<tr><td>" + val.id + "</td><td>" + val.model + "</td><td>" + val.specs + "</td><td>" + val.price + "</td></tr>").appendTo($("#tab1"));
+            })
+            })
+                        
+        }
+            $(document).ready(function () {
+
+                getPhones();
+
+               
+
+        //POST
+            $("#btn1").click(function () {
+                var n = $("#model").val();
+            var e = $("#specs").val();
+            var p = $("#price").val();
+                $.ajax({
+
+                type: "POST",
+
+            contentType: "application/json;charset=utf-8",
+
+            url: "/api/Phones/",
+
+                    data: JSON.stringify({
+
+
+
+                        model: n,
+
+                        specs: e,
+                         price: p,
+
+
+
+        }),
+
+        dataType: "JSON",
+
+                    success: function (data) {
+                        getPhones();
+                        location.reload(true);
+                    }
+});
+
+
+})
+//Delete
+            $("#btn2").click(function () {
+                var id = $("#id").val();
+
+                $.ajax({
+
+                type: "DELETE",
+
+            contentType: "application/json;charset=utf-8",
+
+            url: "/api/Phones/" + $("#id").val(),
+
+                    data: JSON.stringify({
+
+
+
+                id: $("#id").val(),
+
+
+
+
+
+        }),
+
+        dataType: "JSON",
+
+                    success: function (data) {
+                        getPhones();
+                        location.reload(true);
+
+
+                }
+});
+
+
+})
+
+//Update
+            $("#btn3").click(function () {
+            var i = $("#id").val();
+            var m = $("#model").val();
+            var em = $("#specs").val();
+            var ph = $("#price").val();
+           
+                $.ajax({
+
+                type: "PUT",
+
+            contentType: "application/json;charset=utf-8",
+
+            url: "/api/Phones/" + $("#id").val(),
+
+            data: JSON.stringify({
+
+
+                    id: i,
+                    model: m,
+                    specs: em,
+                    price: ph,
+                }),
+
+        dataType: "JSON",
+
+        success: function (data) {
+            getPhones();
+            location.reload(true);
+
+
+
+        }
+});
+
+
+})
+});
+
+   
+    </script>
+</head>
+<body>
+    <h2>SmartPhones Store</h2>
+
+    <table id="tab1">
+        <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Specs</th>
+            <th>Price</th>
+          
+        </tr>
+
+    </table>
+
+    <br />
+    <br />
+    <br />
+    ID: <input type="text" name="id" id="id" value="" /><br />
+    Phone Model : <input type="text" name="model" id="model" value="" /><br />
+
+    Phone Specs: <input type="text" name="specs" id="specs" value="" /><br />
+    Price: <input type="text" name="price" id="price" value="" /><br />
+
+    <input type="button" name="btn" id="btn1" value="Add" />
+    <input type="button" name="btn2" id="btn2" value="Delete" />
+    <input type="button" name="btn3" id="btn3" value="Update" />
+</body>
+</html>
+
